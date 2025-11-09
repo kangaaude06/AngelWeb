@@ -12,7 +12,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
 } catch (PDOException $e) {
-    // Arrête le script et affiche l'erreur en cas d'échec de connexion
+    // Arrête le script ete l'erreur en cas d'échec de connexion
     die("Erreur de connexion à la base de données : " . $e->getMessage());
 }
 
