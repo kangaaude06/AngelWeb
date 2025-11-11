@@ -3,9 +3,9 @@
 
 // Configuration de la Base de Données
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'gestion_personnel'); // IMPORTANT : Le nom de la BD créée
+define('DB_NAME', 'angels'); // Base de données Angels
 define('DB_USER', 'root');             // Mettez votre utilisateur MySQL
-define('DB_PASS', 'votre_mot_de_passe'); // Mettez votre mot de passe MySQL
+define('DB_PASS', ''); // Mettez votre mot de passe MySQL (vide par défaut sur WAMP)
 
 // Contrainte de temps
 define('HEURE_LIMITE_POINTAGE', '18:30:00'); 
