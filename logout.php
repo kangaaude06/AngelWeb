@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 <?php
 // logout.php
@@ -23,3 +24,14 @@ session_destroy();
 header("Location: login.php");
 exit;
 ?>
+=======
+<?php
+// logout.php
+require_once 'config.php';
+require_once 'Auth.class.php';
+
+$auth = new Auth();
+$auth->logout();
+?>
+
+>>>>>>> 9908589319a8248a0a604cef3955a579ded8a2cb
