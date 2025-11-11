@@ -14,27 +14,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $userHandler = new User();
 
-    // 1. Vérifier si l'ouvrier a été initialisé par la Coordination
-    if ($userHandler->checkOuvrierExistsByInfo($nom, $prenom, $departement)) {
-        
-        // 2. Finaliser l'inscription (ajouter numéro et mot de passe)
-        $data = array(
-            'nom' => $nom,
-            'prenom' => $prenom,
-            'departement' => $departement,
-            'numero_telephone' => $numero_telephone,
-            'password' => $password
-        );
-        
-        if ($userHandler->finalizeOuvrierRegistration($data)) {
-            $message = "Félicitations, votre compte est maintenant actif. Vous pouvez vous connecter.";
-            $message_class = 'success';
-        } else {
-            $message = "Échec de l l'inscription. Le numéro de téléphone est peut-être déjà utilisé.";
-            $message_class = 'error';
-        }
+    // Inscription Directe de l'Ouvrier (Grade ID 4)
+    $data = array(
+        'nom' => $nom,
+        'prenom' => $prenom,
+        'departement' => $departement,
+        'numero_telephone' => $numero_telephone,
+        'password' => $password,
+        'grade_id' => 4 // Ouvrier
+    );
+    
+    // Tente l'enregistrement
+    if ($userHandler->registerUser($data)) {
+        $message = "Félicitations, votre compte Ouvrier est créé. Vous pouvez vous connecter.";
+        $message_class = 'success';
     } else {
-        $message = "Vos informations n'ont pas été pré-enregistrées. Veuillez contacter la Coordination.";
+        $message = "Échec de l'inscription. Le numéro de téléphone est déjà utilisé ou une erreur est survenue (vérifiez votre département).";
         $message_class = 'error';
     }
 }
@@ -43,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Inscription Ouvrier - Finalisation</title>
+    <title>Inscription Ouvrier</title>
     <style>
         :root { --violet: #8A2BE2; --or: #FFD700; --blanc: #FFFFFF; --texte-clair: #F0F0F0; }
         body { font-family: Arial, sans-serif; background-color: var(--blanc); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
@@ -63,21 +58,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div class="inscription-container">
-        <h2>Finaliser Inscription Ouvrier</h2>
+        <h2>Inscription Ouvrier</h2>
         
         <?php if (!empty($message)): ?>
             <div class="message <?php echo $message_class; ?>"><?php echo $message; ?></div>
         <?php endif; ?>
 
         <form method="POST">
-            <div class="form-group"><label for="nom">Nom (tel que pré-enregistré) :</label><input type="text" id="nom" name="nom" required></div>
-            <div class="form-group"><label for="prenom">Prénom (tel que pré-enregistré) :</label><input type="text" id="prenom" name="prenom" required></div>
-            <div class="form-group"><label for="departement">Département (tel que pré-enregistré) :</label><input type="text" id="departement" name="departement" required></div>
+            <div class="form-group"><label for="nom">Nom :</label><input type="text" id="nom" name="nom" required></div>
+            <div class="form-group"><label for="prenom">Prénom :</label><input type="text" id="prenom" name="prenom" required></div>
+            <div class="form-group"><label for="departement">Département :</label><input type="text" id="departement" name="departement" required></div>
             <hr style="border-color: var(--or); margin: 20px 0;">
             <div class="form-group"><label for="numero_telephone">Votre Numéro de Téléphone (Identifiant) :</label><input type="tel" id="numero_telephone" name="numero_telephone" required></div>
             <div class="form-group"><label for="password">Créer un Mot de Passe :</label><input type="password" id="password" name="password" required></div>
             
-            <button type="submit">Finaliser et Activer</button>
+            <button type="submit">M'inscrire</button>
         </form>
         
         <div class="connexion-link"><p><a href="login.php">← Retour à la Connexion</a></p></div>

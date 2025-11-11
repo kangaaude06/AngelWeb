@@ -2,6 +2,11 @@
 // login.php
 require_once 'User.class.php';
 
+// CORRECTION PHP 5.6 - Démarrage de session unique
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 $message = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -53,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div class="login-container">
-        <h2>Connexion Angel House</h2>
+        <h2>Connexion Angel House </h2>
         <?php if (!empty($message)): ?>
             <div class="message"><?php echo $message; ?></div>
         <?php endif; ?>
@@ -69,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit">Se Connecter</button>
         </form>
         <div class="inscription-link">
-            <p>Pas encore inscrit ? <a href="inscription_ouvrier.php">Finaliser mon inscription Ouvrier</a></p>
+            <p>Pas encore inscrit ? <a href="inscription_ouvrier.php">M'inscrire comme Ouvrier</a></p>
         </div>
     </div>
 </body>

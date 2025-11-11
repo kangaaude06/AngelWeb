@@ -1,5 +1,6 @@
 <?php
 // User.class.php
+// NOTE : session_start() n'est PAS ici, il doit être dans le script d'entrée (login.php, dashboard_*.php)
 require_once 'config.php'; 
 
 // CLASSE DB
@@ -28,7 +29,7 @@ class User {
         $sql = "INSERT INTO users (nom, prenom, numero_telephone, departement, grade_id, password_hash) 
                 VALUES (:nom, :prenom, :numero_telephone, :departement, :grade_id, :password_hash)";
         
-        // Remplacement de l'opérateur ??
+        // CORRECTION PHP 5.6 pour l'opérateur ??
         $password_hash = isset($data['password']) ? password_hash($data['password'], PASSWORD_DEFAULT) : NULL;
         $numero_telephone = isset($data['numero_telephone']) ? $data['numero_telephone'] : NULL;
 
@@ -51,6 +52,7 @@ class User {
         $stmt = $this->db->prepare($sql);
         $stmt->execute(array('numero_telephone' => $numero_telephone));
         $user = $stmt->fetch();
+        
         if ($user && password_verify($password, $user['password_hash'])) {
             return $user;
         }
@@ -66,7 +68,16 @@ class User {
         return $stmt->fetchAll();
     }
     
-    // Type hint 'string' et type de retour retirés
+    // NOUVELLE FONCTION pour la Coordination : Récupère TOUS les ouvriers (Grade ID 4)
+    public function getAllOuvriers() {
+        $sql = "SELECT id, nom, prenom, departement, numero_telephone FROM users 
+                WHERE grade_id = 4 AND est_actif = TRUE
+                ORDER BY nom, prenom";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public function getAllUsers($searchTerm = '') { 
         $sql = "SELECT u.id, u.nom, u.prenom, u.numero_telephone, u.departement, g.nom_grade
                 FROM users u JOIN grades g ON u.grade_id = g.id WHERE u.est_actif = TRUE ";
@@ -80,30 +91,7 @@ class User {
         $stmt->execute($params);
         return $stmt->fetchAll();
     }
-
-
-    public function checkOuvrierExistsByInfo($nom, $prenom, $departement) {
-        $sql = "SELECT id FROM users 
-                WHERE nom = :nom AND prenom = :prenom AND departement = :departement 
-                AND grade_id = 4 AND password_hash IS NULL";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute(array('nom' => $nom, 'prenom' => $prenom, 'departement' => $departement));
-        return $stmt->rowCount() > 0;
-    }
-    public function finalizeOuvrierRegistration($data) {
-        $sql = "UPDATE users SET numero_telephone = :numero_telephone, password_hash = :password_hash 
-                WHERE nom = :nom AND prenom = :prenom AND departement = :departement AND grade_id = 4";
-        $password_hash = password_hash($data['password'], PASSWORD_DEFAULT);
-        try {
-            $stmt = $this->db->prepare($sql);
-            return $stmt->execute(array(
-                'numero_telephone' => $data['numero_telephone'], 'password_hash' => $password_hash,
-                'nom' => $data['nom'], 'prenom' => $data['prenom'], 'departement' => $data['departement']
-            ));
-        } catch (PDOException $e) { return false; }
-    }
     
-    // Type hints 'int' et 'string' retirés
     public function sendCommunication($userId, $message) {
         $sql = "SELECT numero_telephone, nom, prenom FROM users WHERE id = :userId";
         $stmt = $this->db->prepare($sql);
