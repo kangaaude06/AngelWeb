@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     
     $grade_id = (int)$_POST['grade_id'];
     
-    // Seuls les Coordinateurs (2) et les Responsables (3) sont ajoutés par l'Admin.
+    // Seuls les Coordinations (2) et les Responsables (3) sont ajoutés par l'Admin.
     if ($grade_id === 2 || $grade_id === 3) {
         $data = array(
             'nom' => trim($_POST['nom']),
@@ -122,7 +122,7 @@ foreach ($allUsers as $user) {
             <div class="stat-box"><h4>Ouvriers</h4><p><?php echo $stats['Ouvrier']; ?></p></div>
         </div>
         
-        <h3>Ajouter un Coordinateur ou un Responsable</h3>
+        <h3>Ajouter un Coordination ou un Responsable</h3>
         <div class="form-user">
             <form method="POST">
                 <input type="hidden" name="action" value="add_user">

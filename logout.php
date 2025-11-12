@@ -1,8 +1,7 @@
 <?php
 // logout.php
-
-// Démarrer la session
-session_start();
+// Nous incluons config pour nous assurer que la session est démarrée avant de la détruire
+require_once 'config.php'; 
 
 // Détruire toutes les variables de session
 $_SESSION = array();

@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tache_id']) && isset(
     $tacheId = (int)$_POST['tache_id'];
     $newStatut = $_POST['new_statut'];
     
-    if ($tacheHandler->updateTacheStatus($tacheId, $ouvrierId, $newStatut)) {
+    if ($tacheHandler->updateOuvrierTacheStatut($tacheId, $ouvrierId, $newStatut)) {
         $message = "Statut de la tâche mis à jour avec succès.";
         $message_class = 'success';
     } else {
